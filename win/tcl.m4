@@ -31,6 +31,10 @@ AC_DEFUN([SC_PATH_TCLCONFIG], [
 	    AS_HELP_STRING([--with-tcl],
 		[directory containing tcl configuration (tclConfig.sh)]),
 	    [with_tclconfig="${withval}"])
+	AC_ARG_WITH(tcl8,
+	    AS_HELP_STRING([--with-tcl8],
+		[Compile for Tcl8 in Tcl9 environment]),
+	    [with_tcl8="${withval}"])
 	AC_MSG_CHECKING([for Tcl configuration])
 	AC_CACHE_VAL(ac_cv_c_tclconfig,[
 
@@ -490,6 +494,10 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
     AC_MSG_CHECKING([if 64bit support is requested])
     AC_ARG_ENABLE(64bit,[  --enable-64bit          enable 64bit support (where applicable)], [do64bit=$enableval], [do64bit=no])
     AC_MSG_RESULT($do64bit)
+
+    if test x"${with_tcl8}" != x; then
+	AC_DEFINE(TCL_MAJOR_VERSION, 8, [Compile for Tcl8?])
+    fi
 
     # Set some defaults (may get changed below)
     EXTRA_CFLAGS=""
