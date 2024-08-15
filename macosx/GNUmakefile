@@ -55,7 +55,7 @@ endif
 
 meta			:= all install embedded install-embedded clean distclean test
 
-styles			:= develop deploy
+styles			:= tcl8 develop deploy
 
 all			:= ${styles}
 all			: ${all}
@@ -95,6 +95,7 @@ objdir			= $(subst ${space},\ ,${OBJ_DIR})
 
 develop_make_args	:= BUILD_STYLE=Development CONFIGURE_ARGS=--enable-symbols
 deploy_make_args	:= BUILD_STYLE=Deployment INSTALL_TARGET=install-strip
+tcl8_make_args		:= BUILD_STYLE=Tcl8 CONFIGURE_ARGS=--with-tcl8
 embedded_make_args	:= EMBEDDED_BUILD=1
 install_make_args	:= INSTALL_BUILD=1
 
@@ -270,7 +271,7 @@ else
 	${CPPROG} -RH "./${FMWK_DIR}"/T{cl,k}.framework "./${APP_DIR}/Wish.app/Contents/Frameworks" && \
 	cd "./${APP_DIR}/Wish.app/Contents" && \
 	rm -rf Frameworks/Tcl.framework/{,/Versions/${TCL_VERSION}}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
-	rm -rf Frameworks/Tk.framework/{,/Versions/${VERSION}}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
+	rm -rf Frameworks/Tk.framework/{,/Versions/${VERSION}}/{Headers,PrivateHeaders,*_debug,*_tcl8,lib*.a,*Config.sh} && \
 	fix_install_id ( ) { \
 	    chmod -RH a+w "$$1"; \
 	    install_name_tool -id $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
