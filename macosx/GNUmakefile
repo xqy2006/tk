@@ -76,7 +76,7 @@ distclean		:= ${styles:%=distclean-%}
 distclean		: ${distclean}
 distclean-%:		action := distclean-
 
-test			:= ${styles:%=test-%}
+test			:= test-develop test-deploy
 test			: ${test}
 test-%:			action := test-
 
@@ -271,7 +271,7 @@ else
 	${CPPROG} -RH "./${FMWK_DIR}"/T{cl,k}.framework "./${APP_DIR}/Wish.app/Contents/Frameworks" && \
 	cd "./${APP_DIR}/Wish.app/Contents" && \
 	rm -rf Frameworks/Tcl.framework/{,/Versions/${TCL_VERSION}}/{Headers,PrivateHeaders,*_debug,lib*.a,*Config.sh} && \
-	rm -rf Frameworks/Tk.framework/{,/Versions/${VERSION}}/{Headers,PrivateHeaders,*_debug,*_tcl8,lib*.a,*Config.sh} && \
+	rm -rf Frameworks/Tk.framework/{,/Versions/${VERSION}}/{Headers,PrivateHeaders,*_debug,tcl8*,lib*.a,*Config.sh} && \
 	fix_install_id ( ) { \
 	    chmod -RH a+w "$$1"; \
 	    install_name_tool -id $$(otool -L "$$1" | awk "/$$2\.framework.*[^:]\$$/ {sub(\"^.*/Frameworks\",\"@executable_path/../Frameworks\",\$$1); print \$$1}") "$$1"; \
