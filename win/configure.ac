@@ -226,7 +226,7 @@ eval "TK_SRC_DIR=\"`cd $srcdir/..; $CYGPATH $(pwd)`\""
 
 eval "TK_DLL_FILE_TCL8=tk$VER${DLLSUFFIX}"
 eval "TK_DLL_FILE_TCL9=tcl9tk$VER${DLLSUFFIX}"
-if test ${TCL_MAJOR_VERSION} = 8 ; then
+if test "${TCL_MAJOR_VERSION}" -lt 9 -o x"${with_tcl8}" != x; then
 eval "TK_DLL_FILE=tk$VER${DLLSUFFIX}"
 if test ${SHARED_BUILD} = 0 -o "$GCC" != "yes" ; then
  eval "TK_LIB_FILE=${LIBPREFIX}tk${VER}${LIBSUFFIX}"
@@ -247,14 +247,14 @@ eval "TK_STUB_LIB_FILE=${LIBPREFIX}tkstub${LIBSUFFIX}" ;
 # I left out the other vars that also need to get defined here.
 # we also need to double check about spaces in path names
 TK_LIB_FLAG="-l"
-if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
     TK_LIB_FLAG="${TK_LIB_FLAG}tcl9"
 fi
 eval "TK_LIB_FLAG=\"${TK_LIB_FLAG}${VER}${LIBFLAGSUFFIX}\""
 TK_LIB_SPEC="-L${libdir} ${TK_LIB_FLAG}"
 eval "TK_BUILD_LIB_SPEC=\"-L`$CYGPATH $(pwd)` ${TK_LIB_FLAG}\""
 
-if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
     eval "TK_STUB_LIB_FLAG=\"-ltkstub${LIBFLAGSUFFIX}\""
 else
     eval "TK_STUB_LIB_FLAG=\"-ltkstub${VER}${LIBFLAGSUFFIX}\""

@@ -799,6 +799,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_tcl
+with_tcl8
 enable_man_symlinks
 enable_man_compression
 enable_man_suffix
@@ -1478,6 +1479,7 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-tcl              directory containing tcl configuration
                           (tclConfig.sh)
+  --with-tcl8             Compile for Tcl8 in Tcl9 environment
   --with-encoding         encoding for configuration values (default: utf-8)
   --with-x                use the X Window System
 
@@ -2630,6 +2632,13 @@ LOCALES="cs da de el en en_gb eo es fr hu it nl pl pt ru sv"
 if test ${with_tcl+y}
 then :
   withval=$with_tcl; with_tclconfig="${withval}"
+fi
+
+
+# Check whether --with-tcl8 was given.
+if test ${with_tcl8+y}
+then :
+  withval=$with_tcl8; with_tcl8="${withval}"
 fi
 
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for Tcl configuration" >&5
@@ -4270,6 +4279,12 @@ fi
 
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $do64bit" >&5
 printf "%s\n" "$do64bit" >&6; }
+
+    if test x"${with_tcl8}" != x; then
+
+printf "%s\n" "#define TCL_MAJOR_VERSION 8" >>confdefs.h
+
+    fi
 
     # Step 0.b: Enable Solaris 64 bit VIS support?
 
@@ -8918,10 +8933,10 @@ fi
 eval eval "TK_UNSHARED_LIB_SUFFIX=${UNSHARED_LIB_SUFFIX}"
 eval eval "TK_SHARED_LIB_SUFFIX=${SHARED_LIB_SUFFIX}"
 eval "TK_LIB_FILE_TCL8=libtk${LIB_SUFFIX}"
-if test ${TCL_MAJOR_VERSION} = 8 ; then
-eval "TK_LIB_FILE=libtk${LIB_SUFFIX}"
-else
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 eval "TK_LIB_FILE=libtcl9tk${LIB_SUFFIX}"
+else
+eval "TK_LIB_FILE=libtk${LIB_SUFFIX}"
 fi
 eval "TK_LIB_FILE_TCL9=libtcl9tk${LIB_SUFFIX}"
 
@@ -9017,12 +9032,12 @@ printf "%s\n" "#define TK_FRAMEWORK 1" >>confdefs.h
         # override libdir default
         libdir="/Library/Frameworks"
     fi
-    if test ${TCL_MAJOR_VERSION} = 8 ; then
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 	TK_LIB_FILE="Tk"
     else
-	TK_LIB_FILE="Tk"
+	TK_LIB_FILE="tcl8Tk"
     fi
-    TK_LIB_FILE_TCL8="Tk"
+    TK_LIB_FILE_TCL8="tcl8Tk"
     TK_LIB_FILE_TCL9="Tk"
     TK_LIB_FLAG="-framework Tk"
     TK_BUILD_LIB_SPEC="-F`pwd | sed -e 's/ /\\\\ /g'` -framework Tk"
@@ -9063,7 +9078,7 @@ else
     # libdir must be a fully qualified path and not ${exec_prefix}/lib
     eval libdir="$libdir"
     TK_LIB_FLAG="-l"
-    if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 	TK_LIB_FLAG="${TK_LIB_FLAG}tcl9"
     fi
     if test "${ac_cv_cygwin}" = "yes" -a "$SHARED_BUILD" = "1"; then

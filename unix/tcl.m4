@@ -31,6 +31,10 @@ AC_DEFUN([SC_PATH_TCLCONFIG], [
 	    AS_HELP_STRING([--with-tcl],
 		[directory containing tcl configuration (tclConfig.sh)]),
 	    [with_tclconfig="${withval}"])
+	AC_ARG_WITH(tcl8,
+	    AS_HELP_STRING([--with-tcl8],
+		[Compile for Tcl8 in Tcl9 environment]),
+	    [with_tcl8="${withval}"])
 	AC_MSG_CHECKING([for Tcl configuration])
 	AC_CACHE_VAL(ac_cv_c_tclconfig,[
 
@@ -889,6 +893,10 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
 	    [enable 64bit support (default: off)]),
 	[do64bit=$enableval], [do64bit=no])
     AC_MSG_RESULT([$do64bit])
+
+    if test x"${with_tcl8}" != x; then
+	AC_DEFINE(TCL_MAJOR_VERSION, 8, [Compile for Tcl8?])
+    fi
 
     # Step 0.b: Enable Solaris 64 bit VIS support?
 

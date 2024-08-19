@@ -580,10 +580,10 @@ AC_C_CHAR_UNSIGNED
 eval eval "TK_UNSHARED_LIB_SUFFIX=${UNSHARED_LIB_SUFFIX}"
 eval eval "TK_SHARED_LIB_SUFFIX=${SHARED_LIB_SUFFIX}"
 eval "TK_LIB_FILE_TCL8=libtk${LIB_SUFFIX}"
-if test ${TCL_MAJOR_VERSION} = 8 ; then
-eval "TK_LIB_FILE=libtk${LIB_SUFFIX}"
-else
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 eval "TK_LIB_FILE=libtcl9tk${LIB_SUFFIX}"
+else
+eval "TK_LIB_FILE=libtk${LIB_SUFFIX}"
 fi
 eval "TK_LIB_FILE_TCL9=libtcl9tk${LIB_SUFFIX}"
 
@@ -642,12 +642,12 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
         # override libdir default
         libdir="/Library/Frameworks"
     fi
-    if test ${TCL_MAJOR_VERSION} = 8 ; then
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 	TK_LIB_FILE="Tk"
     else
-	TK_LIB_FILE="Tk"
+	TK_LIB_FILE="tcl8Tk"
     fi
-    TK_LIB_FILE_TCL8="Tk"
+    TK_LIB_FILE_TCL8="tcl8Tk"
     TK_LIB_FILE_TCL9="Tk"
     TK_LIB_FLAG="-framework Tk"
     TK_BUILD_LIB_SPEC="-F`pwd | sed -e 's/ /\\\\ /g'` -framework Tk"
@@ -688,7 +688,7 @@ else
     # libdir must be a fully qualified path and not ${exec_prefix}/lib
     eval libdir="$libdir"
     TK_LIB_FLAG="-l"
-    if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
 	TK_LIB_FLAG="${TK_LIB_FLAG}tcl9"
     fi
     if test "${ac_cv_cygwin}" = "yes" -a "$SHARED_BUILD" = "1"; then

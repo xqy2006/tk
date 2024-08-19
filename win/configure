@@ -793,6 +793,7 @@ ac_user_opts='
 enable_option_checking
 enable_shared
 with_tcl
+with_tcl8
 enable_64bit
 enable_symbols
 enable_embedded_manifest
@@ -1437,6 +1438,7 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-tcl              directory containing tcl configuration
                           (tclConfig.sh)
+  --with-tcl8             Compile for Tcl8 in Tcl9 environment
 
 Some influential environment variables:
   CC          C compiler command
@@ -3948,6 +3950,13 @@ then :
   withval=$with_tcl; with_tclconfig="${withval}"
 fi
 
+
+# Check whether --with-tcl8 was given.
+if test ${with_tcl8+y}
+then :
+  withval=$with_tcl8; with_tcl8="${withval}"
+fi
+
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for Tcl configuration" >&5
 printf %s "checking for Tcl configuration... " >&6; }
 	if test ${ac_cv_c_tclconfig+y}
@@ -4121,6 +4130,12 @@ fi
 
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $do64bit" >&5
 printf "%s\n" "$do64bit" >&6; }
+
+    if test x"${with_tcl8}" != x; then
+
+printf "%s\n" "#define TCL_MAJOR_VERSION 8" >>confdefs.h
+
+    fi
 
     # Set some defaults (may get changed below)
     EXTRA_CFLAGS=""
@@ -5869,7 +5884,7 @@ eval "TK_SRC_DIR=\"`cd $srcdir/..; $CYGPATH $(pwd)`\""
 
 eval "TK_DLL_FILE_TCL8=tk$VER${DLLSUFFIX}"
 eval "TK_DLL_FILE_TCL9=tcl9tk$VER${DLLSUFFIX}"
-if test ${TCL_MAJOR_VERSION} = 8 ; then
+if test "${TCL_MAJOR_VERSION}" -lt 9 -o x"${with_tcl8}" != x; then
 eval "TK_DLL_FILE=tk$VER${DLLSUFFIX}"
 if test ${SHARED_BUILD} = 0 -o "$GCC" != "yes" ; then
  eval "TK_LIB_FILE=${LIBPREFIX}tk${VER}${LIBSUFFIX}"
@@ -5890,14 +5905,14 @@ eval "TK_STUB_LIB_FILE=${LIBPREFIX}tkstub${LIBSUFFIX}" ;
 # I left out the other vars that also need to get defined here.
 # we also need to double check about spaces in path names
 TK_LIB_FLAG="-l"
-if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
     TK_LIB_FLAG="${TK_LIB_FLAG}tcl9"
 fi
 eval "TK_LIB_FLAG=\"${TK_LIB_FLAG}${VER}${LIBFLAGSUFFIX}\""
 TK_LIB_SPEC="-L${libdir} ${TK_LIB_FLAG}"
 eval "TK_BUILD_LIB_SPEC=\"-L`$CYGPATH $(pwd)` ${TK_LIB_FLAG}\""
 
-if test "${TCL_MAJOR_VERSION}" -gt 8 ; then
+if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" == x; then
     eval "TK_STUB_LIB_FLAG=\"-ltkstub${LIBFLAGSUFFIX}\""
 else
     eval "TK_STUB_LIB_FLAG=\"-ltkstub${VER}${LIBFLAGSUFFIX}\""
