@@ -1,8 +1,8 @@
-name: Windows
+name: Windows1
 on:
   push:
     branches:
-    - "core-8-6-branch"
+    - "core_8-6_branch"
     tags:
     - "core-**"
 permissions:
