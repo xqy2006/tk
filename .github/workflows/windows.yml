@@ -2,7 +2,7 @@ name: Windows1
 on:
   push:
     branches:
-    - "core_8-6_branch"
+    - "core_8_6_branch"
     tags:
     - "core-**"
 permissions:
